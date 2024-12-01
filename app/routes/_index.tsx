@@ -1,4 +1,6 @@
 import type { MetaFunction } from "@remix-run/node";
+import { Button } from "~/ui/components/ui/button";
+
 
 export const meta: MetaFunction = () => {
   return [
@@ -32,6 +34,7 @@ export default function Index() {
           <p className="leading-6 text-gray-700 dark:text-gray-200">
             What&apos;s next?
           </p>
+         <Button>Learn more</Button>
           <ul>
             {resources.map(({ href, text, icon }) => (
               <li key={href}>

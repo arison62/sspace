@@ -2,6 +2,9 @@ import { createRequestHandler } from "@remix-run/express";
 import compression from "compression";
 import express from "express";
 import morgan from "morgan";
+import {Server} from "socket.io"
+import { createServer } from "http";
+
 
 const viteDevServer =
   process.env.NODE_ENV === "production"
@@ -19,7 +22,16 @@ const remixHandler = createRequestHandler({
 });
 
 const app = express();
+const httpServer = createServer(app);
+const io = new Server(httpServer)
 
+
+io.on("connection", (socket) => {
+  console.log("a user connected");
+  socket.on("disconnect", () => {
+    console.log("user disconnected");
+  });
+})
 app.use(compression());
 
 // http://expressjs.com/en/advanced/best-practice-security.html#at-a-minimum-disable-x-powered-by-header
@@ -46,6 +58,6 @@ app.use(morgan("tiny"));
 app.all("*", remixHandler);
 
 const port = process.env.PORT || 3000;
-app.listen(port, () =>
+httpServer.listen(port, () =>
   console.log(`Express server listening at http://localhost:${port}`)
 );
